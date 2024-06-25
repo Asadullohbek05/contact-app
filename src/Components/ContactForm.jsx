@@ -73,8 +73,8 @@ class ContactForm extends Component {
               Please Fill!
             </Form.Control.Feedback>
           </Form.Group>
-          <Button type="submit" variant="success" className="w-100">
-            {isEditContact ? "Save Contact" : "Add Contact"}
+          <Button type="submit" variant="primary" className="w-100">
+            {isEditContact ? "Edit Contact" : "Add Contact"}
           </Button>
         </Form>
       </Container>
