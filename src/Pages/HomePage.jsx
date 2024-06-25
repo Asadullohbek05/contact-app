@@ -3,6 +3,7 @@ import ContactForm from "../Components/ContactForm";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import ContactCard from "../Components/ContactCard";
 import { toast } from "react-toastify";
+import Footer from "../Components/Footer";
 
 const contactsJSON = localStorage.getItem("contacts");
 
@@ -56,6 +57,11 @@ class HomePage extends Component {
   render() {
     const { validated, contacts, contact, isEditContact, search } = this.state;
 
+    let allContacts = contacts.filter(
+      (contact) =>
+        contact.firstName.toLowerCase().includes(search) ||
+        contact.lastName.toLowerCase().includes(search)
+    );
     const favoriteContacts = contacts.filter((el) => el.isFavorite === true);
 
     // Submit Form - Add Contact
@@ -132,13 +138,18 @@ class HomePage extends Component {
       toast.error("Contact Deleted");
     };
 
+    // Search Contacts
     const handleSearch = (e) => {
-      this.setState({ search: e.target.value });
-      const contactResults = contacts.filter((el) =>
-        el.firstName.toLowerCase().includes(search.trim().toLowerCase())
-      );
+      this.setState({ search: e.target.value.trim().toLowerCase() });
+    };
 
-      console.log(contactResults);
+    const handleCategory = (e) => {
+      let currentCategory = e.target.value;
+      if (currentCategory !== "all") {
+        allContacts = contacts.filter(
+          (contact) => contact.relationship === currentCategory
+        );
+      }
     };
 
     return (
@@ -155,16 +166,15 @@ class HomePage extends Component {
             <input
               placeholder="Search contact..."
               className="form-control"
-              value={search}
-              onChange={(e) => handleSearch(e)}
+              onChange={handleSearch}
             />
             <span className="input-group-text">
-              <select className="form-select">
-                <option value="all">All</option>
-                <option value="family">Family</option>
-                <option value="friends">Friends</option>
-                <option value="relatives">Relatives</option>
-                <option value="other">Other</option>
+              <select className="form-select" onChange={handleCategory}>
+                <option value="All">All</option>
+                <option value="Family">Family</option>
+                <option value="Friends">Friends</option>
+                <option value="Relatives">Relatives</option>
+                <option value="Other">Other</option>
               </select>
             </span>
             <span className="input-group-text">
@@ -175,9 +185,9 @@ class HomePage extends Component {
               </select>
             </span>
           </div>
-          <Tabs defaultActiveKey="profile" id="justify-tab-example" justify>
-            <Tab eventKey="profile" title={`All Contacts (${contacts.length})`}>
-              {contacts.map((el) => (
+          <Tabs defaultActiveKey="all" justify variant="pills">
+            <Tab eventKey="all" title={`All Contacts (${contacts.length})`}>
+              {allContacts.map((el) => (
                 <ContactCard
                   key={el.id}
                   likeContact={likeContact}
@@ -188,7 +198,7 @@ class HomePage extends Component {
               ))}
             </Tab>
             <Tab
-              eventKey="home"
+              eventKey="favorite"
               title={`Favorite Contacts (${favoriteContacts.length})`}
             >
               {favoriteContacts.map((el) => (
@@ -202,6 +212,7 @@ class HomePage extends Component {
               ))}
             </Tab>
           </Tabs>
+          <Footer />
         </Container>
       </div>
     );
