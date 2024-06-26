@@ -52,17 +52,26 @@ class HomePage extends Component {
       relationship: "Family",
     },
     search: "",
+    category: "All",
   };
 
   render() {
-    const { validated, contacts, contact, isEditContact, search } = this.state;
+    const { validated, contacts, contact, isEditContact, search, category } =
+      this.state;
 
     let allContacts = contacts.filter(
       (contact) =>
         contact.firstName.toLowerCase().includes(search) ||
         contact.lastName.toLowerCase().includes(search)
     );
-    const favoriteContacts = contacts.filter((el) => el.isFavorite === true);
+
+    if (category !== "All") {
+      allContacts = allContacts.filter(
+        (contact) => contact.relationship === category
+      );
+    }
+
+    const favoriteContacts = allContacts.filter((el) => el.isFavorite === true);
 
     // Submit Form - Add Contact
     const handleSubmit = (e) => {
@@ -125,7 +134,6 @@ class HomePage extends Component {
     // Update Contact
     const editContact = (id) => {
       let currentContact = contacts.find((el) => el.id === id);
-      console.log(currentContact);
       this.setState({ contact: currentContact });
       this.setState({ isEditContact: true });
     };
@@ -144,12 +152,7 @@ class HomePage extends Component {
     };
 
     const handleCategory = (e) => {
-      let currentCategory = e.target.value;
-      if (currentCategory !== "all") {
-        allContacts = contacts.filter(
-          (contact) => contact.relationship === currentCategory
-        );
-      }
+      this.setState({ category: e.target.value });
     };
 
     return (
@@ -169,7 +172,11 @@ class HomePage extends Component {
               onChange={handleSearch}
             />
             <span className="input-group-text">
-              <select className="form-select" onChange={handleCategory}>
+              <select
+                className="form-select"
+                onChange={handleCategory}
+                value={category}
+              >
                 <option value="All">All</option>
                 <option value="Family">Family</option>
                 <option value="Friends">Friends</option>
