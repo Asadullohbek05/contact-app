@@ -206,7 +206,7 @@ class HomePage extends Component {
             </Tab>
             <Tab
               eventKey="favorite"
-              title={`Favorite Contacts (${favoriteContacts.length})`}
+              title={`Favorite Contacts(${favoriteContacts.length})`}
             >
               {favoriteContacts.map((el) => (
                 <ContactCard
