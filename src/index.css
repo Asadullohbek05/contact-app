@@ -6,3 +6,16 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+@media screen and (max-width: 450px) {
+  .search-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 75% !important;
+    margin: auto;
+  }
+  .search-input {
+    width: 100% !important;
+    border-radius: 0 !important;
+  }
+}

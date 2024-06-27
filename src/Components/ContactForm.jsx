@@ -9,7 +9,9 @@ class ContactForm extends Component {
     return (
       <Container>
         <Form
-          className="mt-3 w-50 mx-auto"
+          noValidate
+          className="mt-3 w-75 mx-auto"
+          // style={{ width: "75%" }}
           validated={validated}
           onSubmit={handleSubmit}
         >
@@ -60,7 +62,6 @@ class ContactForm extends Component {
             <Form.Select
               className="cursor-pointer"
               onChange={handleValue}
-              required
               value={contact.relatives}
             >
               <option value="Family">Family</option>
@@ -73,7 +74,7 @@ class ContactForm extends Component {
               Please Fill!
             </Form.Control.Feedback>
           </Form.Group>
-          <Button type="submit" variant="primary" className="w-100">
+          <Button type="submit" variant="primary" className="w-50 d-block mx-auto">
             {isEditContact ? "Save Contact" : "Add Contact"}
           </Button>
         </Form>

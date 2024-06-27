@@ -7,7 +7,7 @@ export class Footer extends Component {
         <span>
           Made by
           <a
-            className="text-decoration-none m-lg-1"
+            className="text-decoration-none mx-1"
             href="https://t.me/Asadullohbek"
           >
             Asadbek Ayubov

@@ -30,12 +30,12 @@ class ContactCard extends Component {
               {relationship === "Family"
                 ? "My Family Member"
                 : relationship === "Friends"
-                ? "My Friend"
-                : relationship === "Relatives"
-                ? "My Relative"
-                : relationship === "Other"
-                ? "Other Person"
-                : "No One"}
+                  ? "My Friend"
+                  : relationship === "Relatives"
+                    ? "My Relative"
+                    : relationship === "Other"
+                      ? "Other Person"
+                      : "No One"}
             </span>
           </div>
         </div>

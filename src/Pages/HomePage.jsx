@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import ContactForm from "../Components/ContactForm";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import ContactCard from "../Components/ContactCard";
@@ -17,32 +17,8 @@ class HomePage extends Component {
         firstName: "Asadbek",
         lastName: "Ayubov",
         phoneNumber: "+998914899186",
-        relationship: "Family",
-        isFavorite: true,
-      },
-      {
-        id: 2,
-        firstName: "Muhammaddiyor",
-        lastName: "Odiljonov",
-        phoneNumber: "+998916006618",
         relationship: "Friends",
-        isFavorite: false,
-      },
-      {
-        id: 3,
-        firstName: "Qosimjon",
-        lastName: "Omonov",
-        phoneNumber: "+998907107856",
-        relationship: "Relatives",
         isFavorite: true,
-      },
-      {
-        id: 4,
-        firstName: "Fazliddin",
-        lastName: "Zokirjonov",
-        phoneNumber: "+998956784534",
-        relationship: "Other",
-        isFavorite: false,
       },
     ],
     contact: {
@@ -56,8 +32,7 @@ class HomePage extends Component {
   };
 
   render() {
-    const { validated, contacts, contact, isEditContact, search, category } =
-      this.state;
+    const { validated, contacts, contact, isEditContact, search, category } = this.state;
 
     let allContacts = contacts.filter(
       (contact) =>
@@ -71,7 +46,7 @@ class HomePage extends Component {
       );
     }
 
-    const favoriteContacts = allContacts.filter((el) => el.isFavorite === true);
+    const favoriteContacts = allContacts.filter((el) => el.isFavorite);
 
     // Submit Form - Add Contact
     const handleSubmit = (e) => {
@@ -86,6 +61,7 @@ class HomePage extends Component {
           this.setState({ contacts: newContacts });
           localStorage.setItem("contacts", JSON.stringify(newContacts));
           toast.success("Contact Added");
+          this.setState({ validated: false });
         } else {
           this.setState({ validated: true });
         }
@@ -134,8 +110,10 @@ class HomePage extends Component {
     // Update Contact
     const editContact = (id) => {
       let currentContact = contacts.find((el) => el.id === id);
+      window.scrollTo(0, 0);
       this.setState({ contact: currentContact });
       this.setState({ isEditContact: true });
+      this.setState({ validated: false });
     };
 
     // Delete Contacts
@@ -151,12 +129,32 @@ class HomePage extends Component {
       this.setState({ search: e.target.value.trim().toLowerCase() });
     };
 
+    // Handle Category
     const handleCategory = (e) => {
       this.setState({ category: e.target.value });
     };
 
+    // Sort Contacts
+    const handleSort = (e) => {
+      const order = e.target.value;
+      const sortedContacts = [...contacts].sort((a, b) => {
+        if (a.firstName.toLowerCase() === b.firstName.toLowerCase()) {
+          return order === "a-z"
+            ? a.lastName.toLowerCase().localeCompare(b.lastName.toLowerCase())
+            : b.lastName.toLowerCase().localeCompare(a.lastName.toLowerCase());
+        }
+        return order === "a-z"
+          ? a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase())
+          : b.firstName.toLowerCase().localeCompare(a.firstName.toLowerCase());
+      });
+      this.setState({ contacts: sortedContacts });
+      toast.success('Contacts Sorted')
+      localStorage.setItem("contacts", JSON.stringify(sortedContacts));
+    };
+
     return (
-      <div>
+      <Fragment>
+        <h1 className="text-center mt-5">Contact App</h1>
         <ContactForm
           validated={validated}
           handleSubmit={handleSubmit}
@@ -165,10 +163,10 @@ class HomePage extends Component {
           contact={contact}
         />
         <Container>
-          <div className="my-3 input-group">
+          <div className="my-3 input-group  search-content search-input-wrapper">
             <input
               placeholder="Search contact..."
-              className="form-control"
+              className="form-control search-input"
               onChange={handleSearch}
             />
             <span className="input-group-text">
@@ -185,8 +183,10 @@ class HomePage extends Component {
               </select>
             </span>
             <span className="input-group-text">
-              <select className="form-select">
-                <option>Sort by</option>
+              <select className="form-select" onChange={handleSort}>
+                <option>
+                  Sort by
+                </option>
                 <option value="a-z">A-Z</option>
                 <option value="z-a">Z-A</option>
               </select>
@@ -221,7 +221,7 @@ class HomePage extends Component {
           </Tabs>
           <Footer />
         </Container>
-      </div>
+      </Fragment>
     );
   }
 }
