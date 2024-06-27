@@ -11,7 +11,6 @@ class ContactForm extends Component {
         <Form
           noValidate
           className="mt-3 w-75 mx-auto"
-          // style={{ width: "75%" }}
           validated={validated}
           onSubmit={handleSubmit}
         >
